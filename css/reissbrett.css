@@ -32,21 +32,20 @@ header {
             color: #E4F1FE;
         }
 
-section#toolbox {
-    width: 280px;
-    top: 58px;
+section#map-tools {
+    float: left;
+    top: 78px;
     bottom: 0;
-    left: 0;
+    left: 20px;
     position: absolute;
-    z-index: 1;
-    padding: 20px;
+    z-index: 2;
 }
 
 section#map {
     right: 0;
     top: 58px;
     bottom: 0;
-    left: 300px;
+    left: 0;
     position: absolute;
     z-index: 1;
 }
