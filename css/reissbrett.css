@@ -3,7 +3,7 @@ body {
     padding: 0;
     font: 16px/1.3 Tahoma,Verdana,Segoe,sans-serif;
     color: #22313F;
-    letter-spacing: 1px;
+    letter-spacing: 3px;
 }
 
 header {
@@ -49,6 +49,51 @@ section#map {
     position: absolute;
     z-index: 1;
 }
+
+section#message-popup {
+    position: absolute;
+    top: -300px;
+    left: 50%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 500px;
+    margin-left: -250px;
+    z-index: 3;
+    background-color: #22313F;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+
+    -moz-transition: top 0.3s ease;
+	-webkit-transition: top 0.3s ease;
+	-o-transition: top 0.3s ease;
+	transition: top 0.3s ease;
+}
+
+    section#message-popup.visible {
+        top: 48px;
+    }
+
+    section#message-popup.info {
+        background-color: #3498DB;
+    }
+
+    section#message-popup.success {
+        background-color: #26A65B;
+    }
+
+    section#message-popup.warning {
+        background-color: #F7CA18;
+    }
+
+    section#message-popup.error {
+        background-color: #CF000F;
+    }
 
 .btn {
     display: inline-block;

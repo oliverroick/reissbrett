@@ -1,7 +1,8 @@
 (function (global) {
     'use strict';
 
-    var map = global.control.map;
+    var map =     global.control.map,
+        message = global.control.message;
 
     function Reissbrett() {
         map.registerListener('draw:conflict:selfintersect', handleSelfIntersect);
@@ -10,15 +11,15 @@
     }
 
     function handleDrawStart() {
-        console.log('draw:start');
+        message.show('info', 'Click on the map to start drawing.', 3000);
     }
 
     function handleSelfIntersect() {
-        console.log('draw:conflict:selfintersect');
+        message.show('warning', 'Self intersecting polygon.', 3000);
     }
 
     function handleIntersect() {
-        console.log('draw:conflict:intersect');
+        message.show('error', 'The polygon intersects with another one.', 3000);
     }
 
     global.app = new Reissbrett();
