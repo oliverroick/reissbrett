@@ -50,7 +50,7 @@ section#map {
     z-index: 1;
 }
 
-section#message-popup {
+section.message {
     position: absolute;
     top: -300px;
     left: 50%;
@@ -75,23 +75,23 @@ section#message-popup {
 	transition: top 0.3s ease;
 }
 
-    section#message-popup.visible {
+    section.message.visible {
         top: 48px;
     }
 
-    section#message-popup.info {
+    section.message.info {
         background-color: #3498DB;
     }
 
-    section#message-popup.success {
+    section.message.success {
         background-color: #26A65B;
     }
 
-    section#message-popup.warning {
+    section.message.warning {
         background-color: #F7CA18;
     }
 
-    section#message-popup.error {
+    section.message.error {
         background-color: #CF000F;
     }
 

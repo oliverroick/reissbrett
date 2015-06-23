@@ -1,37 +1,33 @@
 (function (global) {
     'use strict';
 
-    var container;
+    function Message(type, text) {
+        this.container = document.createElement('section');
 
-    function Message() {
-        container = document.getElementById('message-popup');
+        this.container.classList.add('message');
+        this.container.classList.add(type);
+        this.container.innerHTML = text;
+
+        document.getElementsByTagName('body')[0].appendChild(this.container);
     }
-    global.message = new Message();
+    global.Message = Message;
 
-    function show (type, text, autohide) {
-        clearClasses();
-        container.classList.add('visible');
-        container.classList.add(type);
-        container.innerHTML = text;
+    Message.prototype.show = function show (autohide) {
+        setTimeout(function () { // 20ms lag before element is created
+            this.container.classList.add('visible');
+        }.bind(this), 20);
 
         if (autohide) {
-            setTimeout(function () {
-                hide();
-            }, autohide);
+            setTimeout(function () {this.hide();}.bind(this), autohide);
         }
-    }
-    Message.prototype.show = show;
+    };
 
-    function hide (type, text) {
-        clearClasses();
-        container.innerHTML = '';
-    }
-    Message.prototype.hide = hide;
+    Message.prototype.hide = function hide (type, text) {
+        this.container.classList.remove('visible');
 
-    function clearClasses() {
-        for (var i = 0, len = container.classList.length; i < len; i++) {
-            container.classList.remove(container.classList[i]);
-        }
-    }
+        setTimeout(function () { // wait 400ms for transition to finish
+            this.container.parentNode.removeChild(this.container);
+        }.bind(this), 400);
+    };
 
 }(window.control ? window.control: window.control = {}));

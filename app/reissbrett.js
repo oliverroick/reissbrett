@@ -2,7 +2,7 @@
     'use strict';
 
     var map =     global.control.map,
-        message = global.control.message;
+        Message = global.control.Message;
 
     function Reissbrett() {
         map.registerListener('draw:conflict:selfintersect', handleSelfIntersect);
@@ -11,15 +11,18 @@
     }
 
     function handleDrawStart() {
-        message.show('info', 'Click on the map to start drawing.', 3000);
+        var message = new Message('info', 'Click on the map to start drawing.');
+        message.show(3000);
     }
 
     function handleSelfIntersect() {
-        message.show('warning', 'Self intersecting polygon.', 3000);
+        var message = new Message('warning', 'Self intersecting polygon.');
+        message.show(3000);
     }
 
     function handleIntersect() {
-        message.show('error', 'The polygon intersects with another one.', 3000);
+        var message = new Message('error', 'The polygon intersects with another one.');
+        message.show(3000);
     }
 
     global.app = new Reissbrett();
