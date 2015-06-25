@@ -54,11 +54,16 @@
             .setView([51.50719323477933, -0.12754440307617188], 9);
 
         map.addLayer(mapboxTiles);
+
         map.addLayer(featuresCommitted);
         map.addLayer(featuresDrawn);
 
         map.on('editable:drawing:commit', checkIntersect);
         map.on('editable:drawing:clicked', checkSelfIntersect);
+
+        featuresCommitted.on('mousemove', function(ev) {
+            map._fireDOMEvent(map, ev.originalEvent, 'mousemove');
+        });
 
         newBtn = document.getElementById('new-btn');
         newBtn.onclick = activateDraw;
@@ -68,6 +73,7 @@
     global.map = new Map();
 
     function activateDraw () {
+        newBtn.disabled = true;
         global.map.emitEvent('draw:start');
         map.editTools.startPolygon();
     }
@@ -76,7 +82,7 @@
     function checkSelfIntersect(event) {
         var drawnLayer = event.layer;
 
-        if (!allowSelfIntersect) {
+        if (drawnLayer && !allowSelfIntersect) {
             var kinks = turf.kinks(drawnLayer.toGeoJSON());
             if (kinks.intersections.features.length) {
                 map.editTools._drawingEditor.pop();
@@ -102,9 +108,14 @@
         }
 
         if (!intersections.length) {
+            newBtn.disabled = false;
             drawnLayer.setStyle(styles.COMMITTED);
             featuresDrawn.removeLayer(drawnLayer);
             featuresCommitted.addLayer(drawnLayer);
+
+            drawnLayer.on('mousemove', function(ev) { // this is a workaround for a bug in Leaflet master as of 23/06/2015
+                map._fireDOMEvent(map, ev.originalEvent, 'mousemove');
+            });
         } else {
             drawnLayer.setStyle(styles.CONFLICT);
             global.map.emitEvent('draw:conflict:intersect');

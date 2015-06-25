@@ -118,3 +118,8 @@ section.message {
     background-color: #3e5b75;
     cursor: pointer;
 }
+
+.btn:disabled,
+.btn:disabled:hover {
+    background-color: #DADFE1;
+}
