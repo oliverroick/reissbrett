@@ -2,6 +2,7 @@
     'use strict';
 
     var map =     global.control.map,
+        resolve = global.control.resolve,
         Message = global.control.Message;
 
     function Reissbrett() {
@@ -23,6 +24,14 @@
     function handleIntersect() {
         var message = new Message('error', 'The polygon intersects with another one.');
         message.show(3000);
+
+        resolve.show();
+        resolve.registerListener('input:resolve-polygon-intersect', handleResolve);
+    }
+
+    function handleResolve(eventResult) {
+        map.resolveConflict(eventResult);
+        resolve.removeListener('input:resolve-polygon-intersect', handleResolve);
     }
 
     global.app = new Reissbrett();

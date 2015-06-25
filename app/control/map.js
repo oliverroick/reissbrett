@@ -31,16 +31,6 @@
                 fill: true,
                 fillColor: '#F7CA18',
                 fillOpacity: 0.4
-            },
-            INTERSECTION: {
-                stroke: true,
-                color: '#CF000F',
-                weight: 2,
-                opacity: 1,
-                dashArray: '5, 10',
-                fill: true,
-                fillColor: '#CF000F',
-                fillOpacity: 0.8
             }
         };
 
@@ -76,8 +66,41 @@
         newBtn.disabled = true;
         global.map.emitEvent('draw:start');
         map.editTools.startPolygon();
-    }
-    Map.prototype.activateDraw = activateDraw;
+    };
+
+    Map.prototype.resolveConflict = function resolveConflict (userInput) {
+        var drawnLayer = featuresDrawn.getLayers()[0];
+        var intersections = [];
+
+        featuresCommitted.eachLayer(function(existingLayer) {
+            var intersection = turf.intersect(drawnLayer.toGeoJSON(), existingLayer.toGeoJSON());
+            if (intersection) {
+                intersections.push(existingLayer);
+            }
+        });
+
+        switch (userInput) {
+            case 'merge':
+                if (intersections.length === 1) {
+                    var union = turf.union(drawnLayer.toGeoJSON(), intersections[0].toGeoJSON());
+                    featuresDrawn.removeLayer(drawnLayer);
+                    featuresCommitted.removeLayer(intersections[0])
+
+                    var feature = L.geoJson(union).getLayers()[0];
+                    feature.setStyle(styles.COMMITTED);
+                    feature.on('mousemove', function(ev) {
+                        map._fireDOMEvent(map, ev.originalEvent, 'mousemove');
+                    });
+                    featuresCommitted.addLayer(feature);
+                }
+                break;
+            case 'keep_existing':
+                break;
+            case 'keep_new':
+                break;
+        }
+        newBtn.disabled = false;
+    };
 
     function checkSelfIntersect(event) {
         var drawnLayer = event.layer;
@@ -93,7 +116,7 @@
 
     function checkIntersect(layer) {
         var drawnLayer = layer.layer,
-            intersections = [];
+            intersections = false;
 
         drawnLayer.disableEdit();
 
@@ -101,13 +124,12 @@
             featuresCommitted.eachLayer(function(existingLayer) {
                 var intersection = turf.intersect(drawnLayer.toGeoJSON(), existingLayer.toGeoJSON());
                 if (intersection) {
-                    intersections.push(intersection);
-                    featuresDrawn.addLayer(L.geoJson(intersection, {style: styles.INTERSECTION}));
+                    intersections = true;
                 }
             });
         }
 
-        if (!intersections.length) {
+        if (!intersections) {
             newBtn.disabled = false;
             drawnLayer.setStyle(styles.COMMITTED);
             featuresDrawn.removeLayer(drawnLayer);

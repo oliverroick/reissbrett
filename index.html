@@ -25,6 +25,25 @@
 		<section id="map-tools">
 			<button type="button" id="new-btn" class="btn">+ New</button>
 		</section>
+
+		<section id="resolve">
+			<h3>Resolve intersections</h3>
+			<form id="resolve-polygon-intersect">
+				<label>
+					<input type="radio" name="resolve" value="merge">
+					Merge
+				</label>
+				<label>
+					<input type="radio" name="resolve" value="keep_existing">
+					Keep existing
+				</label>
+				<label>
+					<input type="radio" name="resolve" value="keep_new">
+					Keep new
+				</label>
+				<button type="submit" class="btn">Resolve</button>
+			</form>
+		</section>
 		<section id="map"></section>
 	</div>
 </body>
@@ -32,5 +51,6 @@
 <script src="app/settings.js"></script>
 <script src="app/control/map.js"></script>
 <script src="app/control/message.js"></script>
+<script src="app/control/resolve.js"></script>
 <script src="app/reissbrett.js"></script>
 </html>
