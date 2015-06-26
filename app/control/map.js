@@ -95,8 +95,40 @@
                 }
                 break;
             case 'keep_existing':
+                var erased = drawnLayer.toGeoJSON();
+                for (var i = 0, len = intersections.length; i < len; i ++) {
+                    erased = turf.erase(erased, intersections[i].toGeoJSON());
+                }
+                featuresDrawn.removeLayer(drawnLayer);
+
+                var feature = L.geoJson(erased).getLayers()[0];
+                feature.setStyle(styles.COMMITTED);
+                feature.on('mousemove', function(ev) {
+                    map._fireDOMEvent(map, ev.originalEvent, 'mousemove');
+                });
+                featuresCommitted.addLayer(feature);
+
                 break;
             case 'keep_new':
+                for (var i = 0, len = intersections.length; i < len; i ++) {
+                    erased = turf.erase(intersections[i].toGeoJSON(), drawnLayer.toGeoJSON());
+                    featuresCommitted.removeLayer(intersections[i]);
+
+                    var feature = L.geoJson(erased).getLayers()[0];
+                    feature.setStyle(styles.COMMITTED);
+                    feature.on('mousemove', function(ev) {
+                        map._fireDOMEvent(map, ev.originalEvent, 'mousemove');
+                    });
+                    featuresCommitted.addLayer(feature);
+                }
+
+                drawnLayer.setStyle(styles.COMMITTED);
+                drawnLayer.on('mousemove', function(ev) {
+                    map._fireDOMEvent(map, ev.originalEvent, 'mousemove');
+                });
+                featuresDrawn.removeLayer(drawnLayer);
+                featuresCommitted.addLayer(drawnLayer);
+
                 break;
         }
         newBtn.disabled = false;
